@@ -40,7 +40,6 @@ fun AddHobbyScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // INPUT 1
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
@@ -50,7 +49,6 @@ fun AddHobbyScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // INPUT 2
         OutlinedTextField(
             value = category,
             onValueChange = { category = it },
@@ -60,7 +58,6 @@ fun AddHobbyScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ✅ VALIDATION (REQUIRED)
         Button(
             onClick = {
                 onAddClick(name, category)
@@ -77,7 +74,6 @@ fun AddHobbyScreen(
             Text("Back")
         }
 
-        // ❗ ERROR MESSAGE (BONUS POINTS)
         if (!isValid) {
             Text(
                 text = "Please fill all fields",

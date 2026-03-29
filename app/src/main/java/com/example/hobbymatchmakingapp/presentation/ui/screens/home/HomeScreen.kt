@@ -34,7 +34,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
 
-        // 🔥 TOP BUTTONS
+       
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -47,13 +47,13 @@ fun HomeScreen(
             }
         }
 
-        // TITLE
+        
         Text(
             text = "Hobby Matchmaking",
             style = MaterialTheme.typography.headlineMedium
         )
 
-        // EDGE CASE
+        
         if (hobbies.isEmpty()) {
             Text("No hobbies available")
         } else {
@@ -84,7 +84,7 @@ fun HomeScreen(
                             )
                         }
 
-                        // ✅ FIXED BUTTON
+                       
                         Button(onClick = {
                             onNavigateToDetail(hobby.id)
                         }) {

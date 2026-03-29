@@ -23,7 +23,6 @@ fun NavGraph() {
         startDestination = "home"
     ) {
 
-        // 🏠 HOME
         composable("home") {
             HomeScreen(
                 viewModel = viewModel,
@@ -39,12 +38,12 @@ fun NavGraph() {
             )
         }
 
-        // 👤 PROFILE
+        
         composable("profile") {
             ProfileScreen()
         }
 
-        // ➕ ADD HOBBY
+        
         composable("add_hobby") {
             AddHobbyScreen(
                 onAddClick = { name: String, category: String ->
@@ -56,7 +55,7 @@ fun NavGraph() {
             )
         }
 
-        // 📄 DETAILS SCREEN
+        
         composable("details/{hobbyId}") { backStackEntry ->
 
             val hobbyId = backStackEntry.arguments
@@ -81,7 +80,7 @@ fun NavGraph() {
             }
         }
 
-        // ✏️ EDIT SCREEN
+        
         composable("edit/{hobbyId}") { backStackEntry ->
 
             val hobbyId = backStackEntry.arguments
