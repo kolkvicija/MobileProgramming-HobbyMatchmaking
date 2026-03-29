@@ -31,4 +31,10 @@ class HomeViewModel : ViewModel() {
         currentList.add(newHobby)
         _hobbies.value = currentList
     }
+    fun updateHobby(id: Int, name: String, category: String) {
+        _hobbies.value = _hobbies.value.map {
+            if (it.id == id) it.copy(name = name, category = category)
+            else it
+        }
+    }
 }

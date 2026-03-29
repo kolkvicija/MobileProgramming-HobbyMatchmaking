@@ -1,9 +1,8 @@
-package com.example.hobbymatchmakingapp.presentation.ui.screens.add_hobby
+package com.example.hobbymatchmakingapp.presentation.ui.screens.edit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -17,72 +16,48 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.hobbymatchmakingapp.presentation.util.Hobby
 
 @Composable
-fun AddHobbyScreen(
-    onAddClick: (String, String) -> Unit,
+fun EditHobbyScreen(
+    hobby: Hobby,
+    onSave: (String, String) -> Unit,
     onBack: () -> Unit
 ) {
-
-    var name by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf("") }
-
+    var name by remember { mutableStateOf(hobby.name) }
+    var category by remember { mutableStateOf(hobby.category) }
     val isValid = name.isNotBlank() && category.isNotBlank()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "Add Hobby",
-            style = MaterialTheme.typography.headlineMedium
-        )
+        Text("Edit Hobby", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
-
-        // INPUT 1
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Hobby Name") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Name") }
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
-        // INPUT 2
         OutlinedTextField(
             value = category,
             onValueChange = { category = it },
-            label = { Text("Category") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Category") }
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // ✅ VALIDATION (REQUIRED)
         Button(
             onClick = {
-                onAddClick(name, category)
+                onSave(name, category)
                 onBack()
             },
             enabled = isValid
         ) {
-            Text("Add Hobby")
+            Text("Save")
         }
-
         Spacer(modifier = Modifier.height(8.dp))
-
-        Button(onClick = { onBack() }) {
+        Button(onClick = onBack) {
             Text("Back")
-        }
-
-        // ❗ ERROR MESSAGE (BONUS POINTS)
-        if (!isValid) {
-            Text(
-                text = "Please fill all fields",
-                color = MaterialTheme.colorScheme.error
-            )
         }
     }
 }
