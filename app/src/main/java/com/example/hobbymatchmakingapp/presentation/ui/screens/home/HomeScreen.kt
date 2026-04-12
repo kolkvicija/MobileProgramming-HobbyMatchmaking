@@ -16,13 +16,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.hobbymatchmakingapp.presentation.viewmodel.HomeViewModel
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
     onNavigateToProfile: () -> Unit,
     onNavigateToAdd: () -> Unit,
-    onNavigateToDetail: (Int) -> Unit 
+    onNavigateToDetail: (Int) -> Unit
 ) {
 
     val hobbies by viewModel.hobbies.collectAsState()
@@ -34,7 +36,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
 
-       
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -47,48 +49,51 @@ fun HomeScreen(
             }
         }
 
-        
+
         Text(
             text = "Hobby Matchmaking",
             style = MaterialTheme.typography.headlineMedium
         )
 
-        
+
         if (hobbies.isEmpty()) {
             Text("No hobbies available")
         } else {
 
-            hobbies.forEach { hobby ->
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                ) {
+                items(hobbies) { hobby ->
 
-                    Row(
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
 
-                        Column {
-                            Text(
-                                text = hobby.name,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = hobby.category,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
 
-                       
-                        Button(onClick = {
-                            onNavigateToDetail(hobby.id)
-                        }) {
-                            Text("View")
+                            Column {
+                                Text(
+                                    text = hobby.name,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = hobby.category,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+
+                            Button(onClick = {
+                                onNavigateToDetail(hobby.id)
+                            }) {
+                                Text("View")
+                            }
                         }
                     }
                 }
