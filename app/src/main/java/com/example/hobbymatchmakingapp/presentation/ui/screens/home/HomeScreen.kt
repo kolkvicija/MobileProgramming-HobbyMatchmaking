@@ -3,14 +3,19 @@ package com.example.hobbymatchmakingapp.presentation.ui.screens.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -34,13 +39,11 @@ fun HomeScreen(
 
     val hobbies by viewModel.hobbies.collectAsState()
 
-    // ✅ STATE
     var selectedCategory by remember { mutableStateOf("All") }
     var searchQuery by remember { mutableStateOf("") }
 
     val categories = listOf("All", "Sport", "Entertainment", "Lifestyle", "Education")
 
-    // ✅ DERIVED STATE
     val filteredHobbies = hobbies
         .filter {
             selectedCategory == "All" || it.category == selectedCategory
@@ -52,83 +55,94 @@ fun HomeScreen(
     val hobbyCount = filteredHobbies.size
     val sportCount = hobbies.count { it.category == "Sport" }
 
-    // ✅ UI
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(16.dp)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Hobby Match",
+                style = MaterialTheme.typography.headlineMedium
+            )
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { onNavigateToProfile() }) {
-                Text("Profile")
-            }
-
-            Button(onClick = { onNavigateToAdd() }) {
-                Text("Add Hobby")
+            Row {
+                Button(onClick = onNavigateToProfile) {
+                    Text("Profile")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = onNavigateToAdd) {
+                    Text("Add")
+                }
             }
         }
 
-        Text(
-            text = "Hobby Matchmaking",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        // ✅ SEARCH
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
             label = { Text("Search hobbies...") },
             modifier = Modifier.fillMaxWidth()
         )
-
-        // ✅ CATEGORY FILTER
+        Spacer(modifier = Modifier.height(12.dp))
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(categories) { category ->
-                Button(onClick = { selectedCategory = category }) {
+
+                val isSelected = category == selectedCategory
+
+                Button(
+                    onClick = { selectedCategory = category },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isSelected)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.secondary
+                    )
+                ) {
                     Text(category)
                 }
             }
         }
 
-        // ✅ DERIVED STATE DISPLAY
+        Spacer(modifier = Modifier.height(12.dp))
         Text("Showing: $hobbyCount hobbies")
         Text("Sports hobbies: $sportCount")
 
-        if (filteredHobbies.isEmpty()) {
-            Text("No hobbies available")
-        } else {
+        Spacer(modifier = Modifier.height(8.dp))
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(filteredHobbies) { hobby ->
 
-                items(filteredHobbies) { hobby ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(6.dp)
+                ) {
 
-                    Card(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
+                        Column {
+                            Text(
+                                text = hobby.name,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Text(
+                                text = hobby.category,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
 
-                            Column {
-                                Text(
-                                    text = hobby.name,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Text(
-                                    text = hobby.category,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-
-                            Button(onClick = {
-                                onNavigateToDetail(hobby.id)
-                            }) {
-                                Text("View")
-                            }
+                        Button(onClick = {
+                            onNavigateToDetail(hobby.id)
+                        }) {
+                            Text("View")
                         }
                     }
                 }
