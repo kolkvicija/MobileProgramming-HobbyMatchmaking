@@ -2,6 +2,7 @@ package com.example.hobbymatchmakingapp.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,7 +16,7 @@ import com.example.hobbymatchmakingapp.presentation.viewmodel.HomeViewModel
 @Composable
 fun NavGraph() {
 
-    val viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val viewModel: HomeViewModel = viewModel()
     val navController = rememberNavController()
 
     NavHost(
@@ -23,7 +24,11 @@ fun NavGraph() {
         startDestination = "home"
     ) {
 
+        // 🏠 HOME
         composable("home") {
+
+            val hobbies = viewModel.hobbies.collectAsState().value
+
             HomeScreen(
                 viewModel = viewModel,
                 onNavigateToProfile = {
@@ -33,20 +38,25 @@ fun NavGraph() {
                     navController.navigate("add_hobby")
                 },
                 onNavigateToDetail = { hobbyId ->
-                    navController.navigate("details/$hobbyId")
+
+                    val hobby = hobbies.find { it.id == hobbyId }
+
+                    hobby?.let {
+                        navController.navigate("details/${it.id}/${it.name}")
+                    }
                 }
             )
         }
 
-        
+        // 👤 PROFILE
         composable("profile") {
-            ProfileScreen()
+            ProfileScreen(viewModel = viewModel)
         }
 
-        
+        // ➕ ADD
         composable("add_hobby") {
             AddHobbyScreen(
-                onAddClick = { name: String, category: String ->
+                onAddClick = { name, category ->
                     viewModel.addHobby(name, category)
                 },
                 onBack = {
@@ -55,21 +65,24 @@ fun NavGraph() {
             )
         }
 
-        
-        composable("details/{hobbyId}") { backStackEntry ->
+        // 📄 DETAILS (2 arguments)
+        composable("details/{hobbyId}/{hobbyName}") { backStackEntry ->
+
+            val hobbies = viewModel.hobbies.collectAsState().value
 
             val hobbyId = backStackEntry.arguments
                 ?.getString("hobbyId")
                 ?.toIntOrNull()
 
-            val hobby = viewModel.hobbies
-                .collectAsState()
-                .value
-                .find { it.id == hobbyId }
+            val hobbyName = backStackEntry.arguments
+                ?.getString("hobbyName") ?: ""
+
+            val hobby = hobbies.find { it.id == hobbyId }
 
             if (hobby != null) {
                 HobbyDetailScreen(
                     hobby = hobby,
+                    hobbyName = hobbyName,
                     onBack = {
                         navController.popBackStack()
                     },
@@ -80,17 +93,16 @@ fun NavGraph() {
             }
         }
 
-        
+        // ✏️ EDIT
         composable("edit/{hobbyId}") { backStackEntry ->
+
+            val hobbies = viewModel.hobbies.collectAsState().value
 
             val hobbyId = backStackEntry.arguments
                 ?.getString("hobbyId")
                 ?.toIntOrNull()
 
-            val hobby = viewModel.hobbies
-                .collectAsState()
-                .value
-                .find { it.id == hobbyId }
+            val hobby = hobbies.find { it.id == hobbyId }
 
             if (hobby != null) {
                 EditHobbyScreen(

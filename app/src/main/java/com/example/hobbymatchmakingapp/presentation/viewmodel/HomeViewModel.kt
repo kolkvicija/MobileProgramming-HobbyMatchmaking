@@ -1,6 +1,8 @@
 package com.example.hobbymatchmakingapp.presentation.viewmodel
 
+
 import androidx.lifecycle.ViewModel
+import com.example.hobbymatchmakingapp.model.HardcodedData
 import com.example.hobbymatchmakingapp.presentation.util.Hobby
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,12 +14,9 @@ class HomeViewModel : ViewModel() {
     init {
         loadHobbies()
     }
+
     private fun loadHobbies() {
-        _hobbies.value = listOf(
-            Hobby(1, "Football", "Sport"),
-            Hobby(2, "Gaming", "Entertainment"),
-            Hobby(3, "Cooking", "Lifestyle")
-        )
+        _hobbies.value = HardcodedData.getHobbies()
     }
     fun addHobby(name: String, category: String) {
         val currentList = _hobbies.value.toMutableList()

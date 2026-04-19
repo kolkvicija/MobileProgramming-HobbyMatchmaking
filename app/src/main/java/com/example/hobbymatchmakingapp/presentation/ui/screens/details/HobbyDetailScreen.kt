@@ -1,4 +1,3 @@
-
 package com.example.hobbymatchmakingapp.presentation.ui.screens.details
 
 import androidx.compose.foundation.layout.Column
@@ -18,30 +17,39 @@ import com.example.hobbymatchmakingapp.presentation.util.Hobby
 @Composable
 fun HobbyDetailScreen(
     hobby: Hobby,
+    hobbyName: String, // ✅ second argument
     onBack: () -> Unit,
     onEdit: () -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+
         Text(
             text = "Hobby Details",
             style = MaterialTheme.typography.headlineMedium
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Card {
             Column(modifier = Modifier.padding(16.dp)) {
-                Text("Name: ${hobby.name}")
+                Text("Name: $hobbyName")
                 Text("Category: ${hobby.category}")
             }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Button(onClick = onEdit) {
             Text("Edit")
         }
+
         Spacer(modifier = Modifier.height(8.dp))
+
         Button(onClick = onBack) {
             Text("Back")
         }
